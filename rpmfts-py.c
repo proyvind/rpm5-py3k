@@ -75,8 +75,13 @@ rpmfts_debug (const char * msg, rpmftsObject * s)
 	return;
     if (msg)
 	fprintf(stderr, "*** %s(%p)", msg, s);
+
     if (s)
+#if PY_MAJOR_VERSION >= 3
+	fprintf(stderr, " %d ftsp %p fts %p\n", s->active, s->ftsp, s->fts);
+#else
 	fprintf(stderr, " %u %d ftsp %p fts %p\n", (unsigned) s->ob_refcnt, s->active, s->ftsp, s->fts);
+#endif
 }
 
 static int
@@ -333,7 +338,7 @@ rpmfts_iternext(rpmftsObject * s)
 
 static void rpmfts_free(PyObject * s)
 {
-    _PyObject_GC_Del(s);
+    PyObject_GC_Del(s);
 }
 
 static PyObject * rpmfts_alloc(PyTypeObject * type, Py_ssize_t nitems)
@@ -359,7 +364,7 @@ rpmfts_debug("rpmfts_dealloc", s);
 	_PyModule_Clear((PyObject *)s);
 	Py_XDECREF(s->callbacks);
     }
-    _PyObject_GC_Del((PyObject *)s);
+    PyObject_GC_Del((PyObject *)s);
 }
 
 static int rpmfts_init(rpmftsObject * s, PyObject *args, PyObject *kwds)
@@ -404,7 +409,7 @@ rpmfts_debug("rpmfts_new", s);
 	    name++;
 	else
 	    name = type->tp_name;
-	n = PyString_FromString(name);
+	n = PyBytes_FromString(name);
     }
     if (n != NULL && PyDict_SetItemString(s->md_dict, "__name__", n) != 0)
 	goto fail;
@@ -501,7 +506,7 @@ PyTypeObject rpmfts_Type = {
 	(printfunc) rpmfts_print,	/* tp_print */
 	(getattrfunc)0, 		/* tp_getattr */
 	(setattrfunc)0,			/* tp_setattr */
-	(cmpfunc)0,			/* tp_compare */
+	0,			/* tp_compare */
 	(reprfunc)0,			/* tp_repr */
 	0,				/* tp_as_number */
 	0,				/* tp_as_sequence */
