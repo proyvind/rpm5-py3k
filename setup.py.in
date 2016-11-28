@@ -1,0 +1,58 @@
+#!/usr/bin/env python
+
+from distutils.core import setup, Extension
+import subprocess
+import os
+
+def pkgconfig(what):
+    out = []
+    cmd = 'pkg-config %s %s' % (what, '@PACKAGE_NAME@')
+    pcout = subprocess.check_output(cmd.split()).decode()
+    for token in pcout.split():
+        out.append(token[2:])
+    return out
+
+includedirs = []
+librarydirs = []
+definemacros = [("HAVE_CONFIG_H", "1")]
+
+# See if we're building in-tree
+if os.access('Makefile.am', os.F_OK):
+    includedirs.extend(('..', '.', '../lib', '../build', '../rpmconstant', '../rpmdb', '../rpmio'))
+    librarydirs.extend(('../rpmio/.libs',
+                        '../lib/.libs',
+                        '../build/.libs',
+                        '../rpmdb/.libs',
+                        '../rpmconstant/.libs'))
+    os.environ['PKG_CONFIG_PATH'] = '..'
+else:
+    includedirs.extend(pkgconfig('--cflags'))
+
+rpmmod = Extension('rpm._rpm',
+                   sources = [  'header-py.c', 'rpmds-py.c', 'rpmfd-py.c',
+                              'rpmfi-py.c', 'rpmkeyring-py.c',
+                              'rpmmacro-py.c', 'rpmmi-py.c', 'rpmps-py.c',
+                              'rpmtd-py.c', 'rpmte-py.c', 'rpmts-py.c', 'rpmmodule.c',
+                              ],
+                   include_dirs = includedirs,
+                   libraries = pkgconfig('--libs'),
+                   library_dirs = librarydirs,
+                   define_macros = definemacros,
+                   )
+
+rpmbuild_mod = Extension('rpm._rpmb',
+                         sources = ['rpmbmodule.c', 'spec-py.c'],
+                         include_dirs = includedirs,
+                         libraries = pkgconfig('--libs'),
+                         library_dirs = librarydirs,
+                         define_macros = definemacros,
+                         )
+
+setup(name='@PACKAGE_NAME@',
+      version='@VERSION@',
+      description='Python bindings for @PACKAGE_NAME@',
+      maintainer_email='@PACKAGE_BUGREPORT@',
+      url='http://www.rpm.org/',
+      packages = ['@PACKAGE_NAME@'],
+      ext_modules= [rpmmod, rpmbuild_mod]
+      )
