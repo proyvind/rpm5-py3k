@@ -30,7 +30,7 @@ else:
 
 rpmmod = Extension('rpm._rpm',
                    sources = [  'header-py.c', 'rpmds-py.c', 'rpmfd-py.c',
-                              'rpmfi-py.c', 'rpmkeyring-py.c',
+                              'rpmfi-py.c', 'rpmfts-py.c', 'rpmkeyring-py.c',
                               'rpmmacro-py.c', 'rpmmi-py.c', 'rpmps-py.c',
                               'rpmtd-py.c', 'rpmte-py.c', 'rpmts-py.c', 'rpmmodule.c',
                               ],
