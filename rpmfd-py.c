@@ -195,17 +195,6 @@ static PyObject *rpmfd_tell(rpmfdObject *s)
     
 }
 
-off_t fdSize(FD_t fd);
-off_t fdSize(FD_t fd)
-{
-    struct stat sb;
-    off_t rc = -1;
-
-    if (fstat(Fileno(fd), &sb) == 0)
-        rc = sb.st_size;
-    return rc;
-}
-
 static PyObject *rpmfd_read(rpmfdObject *s, PyObject *args, PyObject *kwds)
 {
     char *kwlist[] = { "size", NULL };
