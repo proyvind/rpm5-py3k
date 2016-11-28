@@ -109,8 +109,8 @@ rpmmacro_GetMacros(PyObject * s, PyObject * args,
 	return mdict;
     }
 
-    oo = PyString_FromString("opts");
-    bo = PyString_FromString("body");
+    oo = PyBytes_FromString("opts");
+    bo = PyBytes_FromString("body");
 
     if (oo != NULL && bo != NULL)
     for (i = 0; i < ac; i++) {
@@ -131,7 +131,7 @@ assert(b != NULL);
 	b++;
 
 	/* Create a "name" dictionary, add "opts" and "body" items. */
-	no = PyString_FromString(n);
+	no = PyBytes_FromString(n);
 	if (no == NULL)
 	    break;
 
@@ -144,7 +144,7 @@ assert(b != NULL);
 	Py_XDECREF(ndo);
 
 	if (o) {
-	    if ((vo = PyString_FromString(o)) != NULL)
+	    if ((vo = PyBytes_FromString(o)) != NULL)
 		PyDict_SetItem(ndo, oo, vo);
 	    else
 		failed = 1;
@@ -152,7 +152,7 @@ assert(b != NULL);
 	}
 
 	if (b) {
-	    if ((vo = PyString_FromString(b)) != NULL)
+	    if ((vo = PyBytes_FromString(b)) != NULL)
 		PyDict_SetItem(ndo, bo, vo);
 	    else
 		failed = 1;

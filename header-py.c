@@ -236,7 +236,7 @@ SPEW((stderr, "*** %s(%p) h %p\n", __FUNCTION__, s, s->h));
 	return NULL;
     }
 
-    rc = PyString_FromStringAndSize(buf, nb);
+    rc = PyBytes_FromStringAndSize(buf, nb);
     buf = _free(buf);
 
     return rc;
@@ -474,8 +474,8 @@ _hdr_debug = -1;
 
     if (obj == NULL) {
 	h = headerNew();
-    } else if (PyCObject_Check(obj)) {
-	h = PyCObject_AsVoidPtr(obj);
+    } else if (CAPSULE_CHECK(obj)) {
+	h = CAPSULE_EXTRACT(obj, "rpm._C_Header");
     } else if (hdrObject_Check(obj)) {
 	h = headerCopy(((hdrObject*) obj)->h);
     } else if (PyBytes_Check(obj)) {

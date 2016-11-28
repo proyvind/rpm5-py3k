@@ -35,11 +35,19 @@ static inline const char * lbl(void * s)
     if (o->ob_type == &PyType_Type)	return o->ob_type->tp_name;
 
     if (o->ob_type == &PyBaseObject_Type)	return "BaseObj";
+#if PY_MAJOR_VERSION == 2
     if (o->ob_type == &PyBuffer_Type)	return "Buffer";
+#endif
     if (o->ob_type == &PyCFunction_Type)	return "CFunction";
+#if PY_MAJOR_VERSION >= 3
+    if (o->ob_type == &PyCapsule_Type)	return "Capsule";
+#else
     if (o->ob_type == &PyCObject_Type)	return "CObject";
+#endif
     if (o->ob_type == &PyCell_Type)	return "Cell";
+#if PY_MAJOR_VERSION == 2
     if (o->ob_type == &PyClass_Type)	return "Class";
+#endif
     if (o->ob_type == &PyClassMethod_Type)	return "ClassMethod";
     if (o->ob_type == &PyStaticMethod_Type)	return "StaticMethod";
     if (o->ob_type == &PyCode_Type)	return "Code";
@@ -48,12 +56,22 @@ static inline const char * lbl(void * s)
 #if PY_MAJOR_VERSION == 2 && PY_MINOR_VERSION < 4
     if (o->ob_type == &PyDictIter_Type)	return "DictIter";
 #endif
+#if PY_MAJOR_VERSION == 2
     if (o->ob_type == &PyFile_Type)	return "File";
+#endif
     if (o->ob_type == &PyFloat_Type)	return "Float";
     if (o->ob_type == &PyFrame_Type)	return "Frame";
     if (o->ob_type == &PyFunction_Type)	return "Function";
+#if PY_MAJOR_VERSION >= 3
+    if (o->ob_type == &PyInstanceMethod_Type)	return "InstanceMethod";
+#else
     if (o->ob_type == &PyInstance_Type)	return "Instance";
+#endif
+#if PY_MAJOR_VERSION >= 3
+    if (o->ob_type == &PyLong_Type)	return "Long";
+#else
     if (o->ob_type == &PyInt_Type)	return "Int";
+#endif
     if (o->ob_type == &PyList_Type)	return "List";
     if (o->ob_type == &PyLong_Type)	return "Long";
     if (o->ob_type == &PyMethod_Type)	return "Method";
@@ -64,7 +82,12 @@ static inline const char * lbl(void * s)
     if (o->ob_type == &PySeqIter_Type)	return "SeqIter";
     if (o->ob_type == &PyCallIter_Type)	return "CallIter";
     if (o->ob_type == &PySlice_Type)	return "Slice";
+
+#if PY_MAJOR_VERSION >= 3
+    if (o->ob_type == &PyBytes_Type)	return "Bytes";
+#else
     if (o->ob_type == &PyString_Type)	return "String";
+#endif
     if (o->ob_type == &PySuper_Type)	return "Super";
     if (o->ob_type == &PyTuple_Type)	return "Tuple";
     if (o->ob_type == &PyType_Type)	return "Type";

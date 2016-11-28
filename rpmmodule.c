@@ -302,7 +302,7 @@ static void addRpmTags(PyObject *module)
     for (t = rpmTagTable; t && t->name; t++) {
 	PyDict_SetItemString(d, (char *) t->name, to=PyInt_FromLong(t->val));
 	Py_XDECREF(to);
-        PyDict_SetItem(dict, to, o=PyString_FromString(t->name + 7));
+        PyDict_SetItem(dict, to, o=PyBytes_FromString(t->name + 7));
 	Py_XDECREF(o);
     }
  }
@@ -318,7 +318,7 @@ static void addRpmTags(PyObject *module)
 	    continue;
         PyDict_SetItemString(d, (char *) ext->name, to=PyInt_FromLong(tagValue(ext->name)));
 	Py_XDECREF(to);
-        PyDict_SetItem(dict, to, o=PyString_FromString(ext->name + 7));
+        PyDict_SetItem(dict, to, o=PyBytes_FromString(ext->name + 7));
 	Py_XDECREF(o);
     }
  }
@@ -457,7 +457,8 @@ static int initModule(PyObject *m)
     Py_INCREF(&rpmts_Type);
     PyModule_AddObject(m, "ts", (PyObject *) &rpmts_Type);
 
-#else
+
+#if PY_MAJOR_VERSION < 3
     hdr_Type.ob_type = &PyType_Type;
     rpmal_Type.ob_type = &PyType_Type;
     rpmds_Type.ob_type = &PyType_Type;
@@ -468,6 +469,7 @@ static int initModule(PyObject *m)
     rpmps_Type.ob_type = &PyType_Type;
     rpmte_Type.ob_type = &PyType_Type;
     rpmts_Type.ob_type = &PyType_Type;
+#endif
 #endif
 
     addRpmTags(m);
